@@ -19,19 +19,23 @@ def sendwhatmsg_instantly(
     wait_time: int = 15,
     tab_close: bool = False,
     close_time: int = 3,
+    screen_pos: tuple = (core.WIDTH/2, core.HEIGHT/2)
 ) -> None:
     """Send WhatsApp Message Instantly"""
 
     if not core.check_number(number=phone_no):
         raise exceptions.CountryCodeException("Country Code Missing in Phone Number!")
 
-    phone_no = phone_no.replace(" ", "")
+
     if not fullmatch(r"^\+?[0-9]{2,4}\s?[0-9]{10}$", phone_no):
         raise exceptions.InvalidPhoneNumber("Invalid Phone Number.")
 
-    web.open(f"https://web.whatsapp.com/send?phone={phone_no}&text={quote(message)}")
+    web.open(
+        url=f"https://web.whatsapp.com/send?phone={phone_no}&text={quote(message)}",
+        new=0
+    )
     time.sleep(4)
-    pg.click(core.WIDTH / 2, core.HEIGHT / 2)
+    pg.click(*screen_pos)
     time.sleep(wait_time - 4)
     core.findtextbox()
     pg.press("enter")
